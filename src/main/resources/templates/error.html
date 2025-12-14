@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh;">
+
+  <article style="text-align: center; width: 100%; max-width: 600px;">
+    <header>
+      <h1 th:text="${errorCode}" style="font-size: 5rem; margin-bottom: 0; color: #c62828;">ERROR</h1>
+    </header>
+
+    <hgroup>
+      <h2>Упс! Что-то пошло не так.</h2>
+      <p th:text="${errorMessage}" class="secondary">Описание ошибки</p>
+    </hgroup>
+
+    <footer>
+      <div class="grid">
+        <a href="/" role="button" class="contrast">🏠 На главную</a>
+        <a href="javascript:history.back()" role="button" class="secondary outline">🔙 Вернуться назад</a>
+      </div>
+    </footer>
+  </article>
+
+</main>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

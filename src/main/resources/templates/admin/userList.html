@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container">
+    <hgroup>
+        <h3>Управление пользователями</h3>
+        <h2>Список всех зарегистрированных</h2>
+    </hgroup>
+
+    <article th:each="user : ${users}">
+        <div class="grid">
+            <div>
+                <strong th:text="${user.userName}">Username</strong>
+                <small th:text="' (' + ${user.email} + ')'" class="secondary"></small>
+                <br>
+                Роль: <kbd th:text="${user.role.userRoles}"></kbd>
+                <br>
+                Статус:
+                <span th:if="${user.isBanned}" style="color: var(--del-color);">⛔ В бане</span>
+                <span th:if="${!user.isBanned}" style="color: var(--ins-color);">✅ Активен</span>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: flex-end;">
+                <form th:action="@{/admin/users/ban}" method="post" style="margin: 0;">
+                    <input type="hidden" name="userId" th:value="${user.id}"/>
+                    <button type="submit" class="outline"
+                            th:classappend="${user.isBanned} ? 'secondary' : 'contrast'">
+                        <span th:text="${user.isBanned} ? 'Разбанить' : 'Забанить'"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </article>
+
+</main>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

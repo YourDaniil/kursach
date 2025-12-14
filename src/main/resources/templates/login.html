@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+    <article class="grid">
+        <div>
+            <hgroup>
+                <h1>Вход</h1>
+                <h2>С возвращением!</h2>
+            </hgroup>
+
+            <div th:if="${errorMessage}">
+                <p style="color: red;" th:text="${errorMessage}"></p>
+            </div>
+            <div th:if="${successMessage}">
+                <p style="color: green;" th:text="${successMessage}"></p>
+            </div>
+
+            <form th:action="@{/users/login}" method="post">
+                <input type="text" name="username" placeholder="Логин" required aria-label="Login">
+                <input type="password" name="password" placeholder="Пароль" required aria-label="Password">
+                <button type="submit" class="contrast">Войти</button>
+            </form>
+            <small>Нет аккаунта? <a href="/users/register">Зарегистрироваться</a></small>
+        </div>
+        <div style="background-image: url('/pic/food/блины.png'); background-size: cover; background-position: center; min-height: 200px; border-radius: 8px;"></div>
+    </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

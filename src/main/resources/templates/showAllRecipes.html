@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container">
+    <hgroup>
+        <h2>Все рецепты</h2>
+        <p>Найдено идей: <span th:text="${countAllRecipes}"></span></p>
+    </hgroup>
+
+    <details>
+        <summary role="button" class="secondary outline">Фильтры и поиск</summary>
+        <article>
+            <form action="/recipes/all" method="get">
+                <div class="grid">
+                    <label>Категория
+                        <select name="categoryType">
+                            <option value="">Все</option>
+                            <option th:each="cat : ${category}" th:value="${cat}" th:text="${cat}" th:selected="${cat == categoryType}"></option>
+                        </select>
+                    </label>
+                    <label>Сложность
+                        <select name="difficultType">
+                            <option value="">Любая</option>
+                            <option th:each="diff : ${recipeDifficult}" th:value="${diff}" th:text="${diff}" th:selected="${diff == difficultType}"></option>
+                        </select>
+                    </label>
+                    <label>Время
+                        <select name="timeType">
+                            <option value="">Любое</option>
+                            <option th:each="t : ${time}" th:value="${t}" th:text="|до ${t} мин|" th:selected="${t == timeType}"></option>
+                        </select>
+                    </label>
+                    <label>Порции
+                        <select name="countOfServings">
+                            <option value="">Любое</option>
+                            <option th:each="s : ${servings}" th:value="${s}" th:text="|от ${s}|" th:selected="${s == countOfServings}"></option>
+                        </select>
+                    </label>
+                </div>
+                <div class="grid">
+                    <label>Сортировка
+                        <select name="howSort">
+                            <option value="">По дате</option>
+                            <option th:each="s : ${howSort}" th:value="${s}" th:text="${s}" th:selected="${s == howSort}"></option>
+                        </select>
+                    </label>
+                    <button type="submit">Применить</button>
+                </div>
+            </form>
+        </article>
+    </details>
+
+    <hr>
+
+    <div class="grid">
+        <article th:each="recipe : ${recipes}">
+            <header>
+                <img th:src="@{${recipe.imageRoot}}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+            </header>
+            <h4 th:text="${recipe.title}">Название</h4>
+            <p th:text="${recipe.description}" style="height: 3em; overflow: hidden;">Описание</p>
+            <footer>
+                <a th:href="@{/recipe/{title}(title=${recipe.title})}" role="button" class="outline" style="width: 100%">Подробнее</a>
+            </footer>
+        </article>
+    </div>
+
+    <nav th:if="${totalPages != null && totalPages > 1}">
+        <ul>
+            <li th:if="${currentPage > 0}">
+                <a th:href="@{/recipes/all(page=${currentPage - 1}, size=3)}" role="button" class="outline">← Назад</a>
+            </li>
+            <li>
+                <small>Страница <span th:text="${currentPage + 1}"></span> из <span th:text="${totalPages}"></span></small>
+            </li>
+            <li th:if="${currentPage + 1 < totalPages}">
+                <a th:href="@{/recipes/all(page=${currentPage + 1}, size=3)}" role="button" class="outline">Вперед →</a>
+            </li>
+        </ul>
+    </nav>
+
+    <article th:if="${#lists.isEmpty(recipes)}" class="text-center">
+        <h3>Ничего не найдено 😔</h3>
+        <p>Попробуйте изменить фильтры.</p>
+    </article>
+
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

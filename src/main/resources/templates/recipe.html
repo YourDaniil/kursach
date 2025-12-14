@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container">
+
+    <article>
+        <header class="grid">
+            <div>
+                <hgroup>
+                    <h1 th:text="${recipeDetails.title}">Название</h1>
+                    <h3 th:text="${recipeDetails.category.name}">Категория</h3>
+                </hgroup>
+                <div class="grid">
+                    <small>🕒 <span th:text="${recipeDetails.cookTime}"></span> мин</small>
+                    <small>🍽️ <span th:text="${recipeDetails.servings}"></span> порций</small>
+                    <small>⭐ <span th:text="${recipeDetails.difficult.translateRecipeDifficult}"></span></small>
+                </div>
+                <br>
+                <form th:action="@{/recipe/{title}/favourite/add(title=${recipeDetails.title})}" method="post">
+                    <button class="contrast outline">❤️ В избранное</button>
+                </form>
+            </div>
+            <div>
+                <img th:src="@{${recipeDetails.imageRoot}}" style="width:100%; border-radius: 8px;">
+            </div>
+        </header>
+
+        <div class="grid">
+            <div>
+                <h4>Ингредиенты</h4>
+                <ul>
+                    <li th:each="i : ${recipeDetails.ingredients}" th:text="${i.name}"></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Приготовление</h4>
+                <p th:text="${recipeDetails.instructions}" style="white-space: pre-wrap;"></p>
+            </div>
+        </div>
+
+        <footer th:if="${successMessage}">
+            <mark th:text="${successMessage}"></mark>
+        </footer>
+    </article>
+
+    <section>
+        <h3>Комментарии</h3>
+
+        <article th:each="c : ${recipeDetails.comments}">
+            <header>
+                <img th:src="@{/pic/avatar.png}" width="30" style="vertical-align: middle;">
+                <strong th:text="${c.user.userName}"></strong>:
+            </header>
+            <p th:text="${c.comment}"></p>
+        </article>
+
+        <article>
+            <form th:action="@{/recipe/{title}/comment/add(title=${recipeDetails.title})}" method="post" th:object="${commentModel}">
+                <label>Оставить отзыв
+                    <input name="comment" th:value="${comment}" placeholder="Напишите, как вам блюдо..." required>
+                </label>
+                <button type="submit">Отправить</button>
+            </form>
+        </article>
+    </section>
+
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

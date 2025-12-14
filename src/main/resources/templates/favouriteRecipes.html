@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container">
+    <hgroup>
+        <h1>Избранное</h1>
+        <p>Ваша коллекция вкусняшек</p>
+    </hgroup>
+
+    <article th:if="${#lists.isEmpty(favorites)}" class="text-center">
+        <h3>Здесь пока пусто! 💔</h3>
+        <p>Вы еще не добавили ни одного рецепта.</p>
+        <a href="/recipes/all" role="button">Найти вкусненькое</a>
+    </article>
+
+    <div class="grid" th:if="${!#lists.isEmpty(favorites)}">
+        <article th:each="recipe : ${favorites}">
+            <header>
+                <img th:src="@{${recipe.imageRoot}}" style="width:100%; height: 200px; object-fit: cover;">
+            </header>
+            <h4 th:text="${recipe.title}"></h4>
+            <ul>
+                <li th:text="|🕒 ${recipe.cookTime} мин|"></li>
+                <li th:text="|📂 ${recipe.category.name}|"></li>
+            </ul>
+
+            <footer class="grid">
+                <a th:href="@{/recipe/{title}(title=${recipe.title})}" role="button" class="outline">Открыть</a>
+                <form th:action="@{/recipes/favourite/remove}" method="post" style="margin: 0;">
+                    <input type="hidden" name="recipeTitle" th:value="${recipe.title}">
+                    <button type="submit" class="secondary outline" onclick="return confirm('Удалить?')">Удалить</button>
+                </form>
+            </footer>
+        </article>
+    </div>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

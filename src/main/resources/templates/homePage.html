@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+
+    <article th:each="r : ${randomRecipeInfos}">
+        <div class="grid">
+            <div>
+                <hgroup>
+                    <h1>Блюдо сезона</h1>
+                    <h2 th:text="${r.title}">Название</h2>
+                </hgroup>
+                <p th:text="${r.description}">Описание</p>
+                <a th:href="@{/recipe/{title}(title=${r.title})}" role="button">Приготовить</a>
+            </div>
+            <div th:style="'background-image: url(' + @{${r.imageRoot}} + '); background-size: cover; min-height: 300px; border-radius: 8px;'"></div>
+        </div>
+    </article>
+
+    <section>
+        <h3>Мне повезет, случайные 5 категорий:</h3>
+        <div class="grid">
+            <a th:each="c : ${categoryInfos}"
+               th:href="@{/recipes/all?categoryType={category}(category=${c.name})}"
+               role="button" class="outline secondary"
+               th:text="${c.name}">
+            </a>
+        </div>
+    </section>
+
+    <hr>
+
+    <section>
+        <h3>Рецепты дня</h3>
+        <div class="grid">
+            <article th:each="r : ${fiveRandomRecipeInfos}">
+                <header>
+                    <img th:src="@{${r.imageRoot}}" style="width:100%; height: 150px; object-fit: cover;">
+                </header>
+                <strong th:text="${r.title}"></strong>
+                <footer>
+                    <a th:href="@{/recipe/{title}(title=${r.title})}">Смотреть</a>
+                </footer>
+            </article>
+        </div>
+    </section>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/recipes/all" role="button" class="contrast">Смотреть все рецепты</a>
+    </div>
+
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

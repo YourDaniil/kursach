@@ -1,0 +1,23 @@
+<nav xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org" class="container">
+    <ul>
+        <li><strong><a href="/" class="contrast">Бизе.com</a></strong></li>
+    </ul>
+    <ul>
+        <li><a href="/">Главная</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a href="/admin/users">Пользователи</a></li>
+        <li><a href="/recipes/all">Рецепты</a></li>
+        <li><a href="/recipes/add">Добавить</a></li>
+
+        <li sec:authorize="isAuthenticated()">
+            <a href="/recipes/favourite" role="button" class="outline">Избранное</a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <form th:method="post" th:action="@{/users/logout}" style="margin: 0;">
+                <button type="submit" class="secondary outline" style="border: none;">Выйти</button>
+            </form>
+        </li>
+
+        <li sec:authorize="!isAuthenticated()"><a href="/users/login">Вход</a></li>
+        <li sec:authorize="!isAuthenticated()"><a href="/users/register" role="button">Регистрация</a></li>
+    </ul>
+</nav>

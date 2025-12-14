@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+
+<main class="container">
+    <h3>Создание нового рецепта</h3>
+
+    <div th:if="${errorMessage}">
+        <article style="background-color: #ffcccc; color: #cc0000; border-color: #cc0000;">
+            <span th:text="${errorMessage}">Error</span>
+        </article>
+    </div>
+
+    <form th:action="@{/recipes/add}" th:object="${addRecipeDto}" method="post">
+
+        <article>
+            <header><strong>Основная информация</strong></header>
+
+            <label>Название рецепта
+                <input type="text" th:field="*{title}" placeholder="Например: Сырники" required>
+            </label>
+
+            <label>Краткое описание
+                <input type="text" th:field="*{description}" placeholder="Пара слов о блюде...">
+            </label>
+
+            <div class="grid">
+                <label>Категория
+                    <select name="categoryName" required>
+                        <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}" th:selected="${cat.name == categoryName}"></option>
+                    </select>
+                </label>
+
+                <label>Сложность
+                    <select name="difficultType" required>
+                        <option th:each="diff : ${difficulties}" th:value="${diff}" th:text="${diff}" th:selected="${diff == difficultType}"></option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="grid">
+                <label>Время (мин)
+                    <input type="number" th:field="*{cookTime}" min="1" placeholder="30" required>
+                </label>
+
+                <label>Порции
+                    <input type="number" th:field="*{servings}" min="1" placeholder="2">
+                </label>
+            </div>
+        </article>
+
+        <article>
+            <header><strong>Ингредиенты</strong></header>
+
+            <div th:each="name, stat : ${ingNames}" class="grid" style="align-items: end; margin-bottom: 10px;">
+                <label th:if="${stat.first}">Название
+                    <input type="text" name="ingName" th:value="${name}" required placeholder="Продукт">
+                </label>
+                <input th:if="${!stat.first}" type="text" name="ingName" th:value="${name}" required placeholder="Продукт">
+
+                <label th:if="${stat.first}">Кол-во
+                    <input type="text" name="ingAmount" th:value="${ingAmounts[__${stat.index}__]}" placeholder="0">
+                </label>
+                <input th:if="${!stat.first}" type="text" name="ingAmount" th:value="${ingAmounts[__${stat.index}__]}" placeholder="0">
+
+                <label th:if="${stat.first}">Ед. изм.
+                    <select name="ingUnit">
+                        <option value="г" th:selected="${ingUnits[__${stat.index}__] == 'г'}">г</option>
+                        <option value="кг" th:selected="${ingUnits[__${stat.index}__] == 'кг'}">кг</option>
+                        <option value="шт" th:selected="${ingUnits[__${stat.index}__] == 'шт'}">шт</option>
+                        <option value="мл" th:selected="${ingUnits[__${stat.index}__] == 'мл'}">мл</option>
+                        <option value="л" th:selected="${ingUnits[__${stat.index}__] == 'л'}">л</option>
+                        <option value="ст.л." th:selected="${ingUnits[__${stat.index}__] == 'ст.л.'}">ст.л.</option>
+                        <option value="ч.л." th:selected="${ingUnits[__${stat.index}__] == 'ч.л.'}">ч.л.</option>
+                        <option value="по вкусу" th:selected="${ingUnits[__${stat.index}__] == 'по вкусу'}">по вкусу</option>
+                    </select>
+                </label>
+                <select th:if="${!stat.first}" name="ingUnit">
+                    <option value="г" th:selected="${ingUnits[__${stat.index}__] == 'г'}">г</option>
+                </select>
+
+                <button type="submit" name="removeIngredient" th:value="${stat.index}" formnovalidate class="secondary outline" style="width: auto;">✕</button>
+            </div>
+
+            <button type="submit" name="action" value="addIngredient" class="contrast outline" formnovalidate>
+                + Добавить ингредиент
+            </button>
+        </article>
+
+        <article>
+            <header><strong>Процесс приготовления</strong></header>
+            <label>
+                <textarea th:field="*{instructions}" rows="6" placeholder="Опишите шаги..."></textarea>
+            </label>
+        </article>
+
+        <button type="submit" name="action" value="save">Опубликовать рецепт</button>
+    </form>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

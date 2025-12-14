@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+  <article>
+    <h3>Регистрация</h3>
+    <div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; margin-bottom: 1rem;"></div>
+
+    <form th:action="@{/users/register}" th:object="${userRegistrationDto}" method="post">
+      <label>Логин
+        <input type="text" th:field="*{username}" required aria-invalid="${#fields.hasErrors('username')}"/>
+        <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red"></small>
+      </label>
+
+      <label>Email
+        <input type="email" th:field="*{email}" required aria-invalid="${#fields.hasErrors('email')}"/>
+        <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red"></small>
+      </label>
+
+      <div class="grid">
+        <label>Пароль
+          <input type="password" th:field="*{password}" required aria-invalid="${#fields.hasErrors('password')}"/>
+          <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red"></small>
+        </label>
+        <label>Повтор пароля
+          <input type="password" th:field="*{confirmPassword}" required/>
+        </label>
+      </div>
+
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+  </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>
